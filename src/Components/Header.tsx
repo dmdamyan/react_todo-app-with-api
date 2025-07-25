@@ -15,7 +15,7 @@ type Props = {
   isAdding: boolean;
   inputRef: React.RefObject<HTMLInputElement>;
   focusInput: () => void | undefined;
-  handleToggleAll: () => void;
+  handleToggleAll: () => Promise<void>;
   isLoading: boolean;
 };
 
@@ -34,7 +34,7 @@ export const Header: React.FC<Props> = ({
   handleToggleAll,
   isLoading,
 }) => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const trimmedTitle = title.trim();
@@ -55,7 +55,7 @@ export const Header: React.FC<Props> = ({
 
     setIsAdding(true);
 
-    createTodo(createdTodo)
+    await createTodo(createdTodo)
       .then(newTodo => {
         setProcessingIds(prev => [...prev, newTodo.id]);
         setTodos(currentTodos => [...currentTodos, newTodo]);
