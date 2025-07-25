@@ -106,14 +106,3 @@ export const Header: React.FC<Props> = ({
     </div>
   );
 };
-
-// Ось як краще організувати логіку:
-
-// Спочатку перевіряєш:
-// const hasUncompleted = todos.some(todo => !todo.completed);
-
-// Якщо є хоча б один невиконаний (hasUncompleted === true), то всім треба поставити completed: true (тобто зробити всі виконаними).
-
-// Якщо всі виконані (hasUncompleted === false), то всім треба поставити completed: false (зробити всі невиконаними).
-
-// Далі через filter/map вибираєш тільки ті todo, у яких статус реально змінюється, і для них відправляєш запити.

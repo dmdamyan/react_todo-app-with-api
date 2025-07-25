@@ -41,8 +41,30 @@ export const TodoItem: React.FC<Props> = ({
       .catch(() => setErrorMessage('Unable to delete a todo'))
       .finally(() => {
         setProcessingIds(prev => prev.filter(id => id !== todo.id));
+        setEditingTodoId(null);
+        setEditingTitle('');
         focusInput();
       });
+  };
+
+  const handleOnBlur = () => {
+    if (editingTitle.trim() !== todo.title && editingTitle.trim().length > 0) {
+      handleToggle(todo);
+
+      return;
+    }
+
+    if (editingTitle.trim().length === 0) {
+      handleClick();
+
+      return;
+    }
+
+    setEditingTitle('');
+    setEditingTodoId(null);
+    focusInput();
+
+    return;
   };
 
   const hasKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -59,17 +81,12 @@ export const TodoItem: React.FC<Props> = ({
 
       return;
     } else if (event.key === 'Enter' && editingTitle.trim().length === 0) {
-      setEditingTitle(todo.title);
-      setErrorMessage('Title should not be empty');
+      handleClick();
 
       return;
-    } else if (event.key === 'Escape' && editingTitle.trim().length > 0) {
-      handleToggle(todo);
-
-      return;
-    } else if (event.key === 'Escape' && editingTitle.trim().length === 0) {
-      setEditingTitle(todo.title);
-      setErrorMessage('Title should not be empty');
+    } else if (event.key === 'Escape') {
+      setEditingTodoId(null);
+      setEditingTitle('');
 
       return;
     }
@@ -141,6 +158,7 @@ export const TodoItem: React.FC<Props> = ({
             setEditingTitle(event.target.value);
           }}
           onKeyDown={hasKeyDown}
+          onBlur={handleOnBlur}
         />
       )}
 
