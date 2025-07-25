@@ -56,7 +56,7 @@ export const App: React.FC = () => {
 
     setProcessingIds(prev => [...prev, todo.id]);
 
-    updateTodo(todo.id, updatedTodo)
+    await updateTodo(todo.id, updatedTodo)
       .then(updated => {
         setTodos(currentTodos =>
           currentTodos.map(t => (t.id === todo.id ? updated : t)),
@@ -78,9 +78,7 @@ export const App: React.FC = () => {
       ? todos.filter(todo => !todo.completed)
       : todos;
 
-    for (const todo of todosToUpdate) {
-      await handleToggle(todo);
-    }
+    await Promise.all(todosToUpdate.map(todo => handleToggle(todo)));
   };
 
   useEffect(() => {
