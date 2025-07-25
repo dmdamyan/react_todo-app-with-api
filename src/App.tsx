@@ -94,11 +94,11 @@ export const App: React.FC = () => {
   }, [isAdding]);
 
   const filteredTodos = todos.filter(todo => {
-    if (filterStatus === 'active') {
+    if (filterStatus === FilterStatus.Active) {
       return !todo.completed;
     }
 
-    if (filterStatus === 'completed') {
+    if (filterStatus === FilterStatus.Completed) {
       return todo.completed;
     }
 
