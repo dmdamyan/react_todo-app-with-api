@@ -64,7 +64,9 @@ export const App: React.FC = () => {
         setEditingTitle('');
         setEditingTodoId(null);
       })
-      .catch(() => setErrorMessage('Unable to update a todo'))
+      .catch(() => {
+        setErrorMessage('Unable to update a todo');
+      })
       .finally(() => {
         setProcessingIds(prev => prev.filter(id => id !== todo.id));
         focusInput();

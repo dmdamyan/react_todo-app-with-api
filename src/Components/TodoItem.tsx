@@ -35,38 +35,31 @@ export const TodoItem: React.FC<Props> = ({
   const handleClick = async () => {
     setProcessingIds(prev => [...prev, todo.id]);
 
-    await deleteTodo(todo.id)
-      .then(() => {
-        setTodos(currentTodos => currentTodos.filter(t => t.id !== todo.id));
-      })
-      .catch(() => setErrorMessage('Unable to delete a todo'))
-      .finally(() => {
-        setProcessingIds(prev => prev.filter(id => id !== todo.id));
-        focusInput();
-      });
-
-    setEditingTodoId(null);
-    setEditingTitle('');
+    try {
+      await deleteTodo(todo.id);
+      setTodos(currentTodos => currentTodos.filter(t => t.id !== todo.id));
+      if (editingTodoId === todo.id) {
+        setEditingTodoId(null);
+        setEditingTitle('');
+      }
+    } catch (error) {
+      setErrorMessage('Unable to delete a todo');
+    } finally {
+      setProcessingIds(prev => prev.filter(id => id !== todo.id));
+      focusInput();
+    }
   };
 
   const handleOnBlur = async () => {
     if (editingTitle.trim() !== todo.title && editingTitle.trim().length > 0) {
       handleToggle(todo);
-
-      return;
-    }
-
-    if (editingTitle.trim().length === 0) {
+    } else if (editingTitle.trim().length === 0) {
       handleClick();
-
-      return;
+    } else if (editingTitle.trim() === todo.title) {
+      setEditingTitle('');
+      setEditingTodoId(null);
+      focusInput();
     }
-
-    setEditingTitle('');
-    setEditingTodoId(null);
-    focusInput();
-
-    return;
   };
 
   const hasKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
